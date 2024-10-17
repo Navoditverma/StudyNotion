@@ -34,7 +34,7 @@
     "server": "cd server && npm run dev",
     "dev": "concurrently -n \"FrontEnd,BackEnd\" -c \"bgBlue,bgYellow\" \"npm start\" \"npm run server\""
   },
- "proxy":"",
+  "proxy": "",
   "eslintConfig": {
     "extends": [
       "react-app",

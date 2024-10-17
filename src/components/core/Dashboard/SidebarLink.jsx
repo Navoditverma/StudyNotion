@@ -7,14 +7,14 @@ const SidebarLink = ({link, iconName}) => {
 
     const Icon = Icons[iconName];
     const location  = useLocation();
-    const dispatch = useDispatch();
+    
 
     const matchRoute = (route) => {
         return matchPath({path:route}, location.pathname);
     }
 
 
-  return (
+  return ( 
     <NavLink
     to={link.path}
     className={ `relative px-8 py-2 text-sm font-medium ${matchRoute(link.path) ? "bg-yellow-800" :"bg-opacity-0"}`}
@@ -26,7 +26,6 @@ const SidebarLink = ({link, iconName}) => {
         </span>
 
         <div className='flex item-center gap-x-2'>
-
             <Icon className="text-lg" />
             <span>{link.name}</span>
         </div>
