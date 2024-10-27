@@ -11,6 +11,7 @@ const IconBtn = ({
 }) => {
   return (
     <button 
+    className='text-white bg-yellow-50    p-3 rounded-sm'
     disabled={disabled}
     onClick={onclick}
     type={type}>

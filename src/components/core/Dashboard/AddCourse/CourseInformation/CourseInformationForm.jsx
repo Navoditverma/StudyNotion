@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Form, set, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux';
-import {fetchCourseCategories} from "../../../../../services/operations/courseAPI"
+import {addCourseDetails, editCourseDetails, fetchCourseCategories} from "../../../../../services/operations/courseAPI"
 import { HiOutlineCurrencyRupee } from 'react-icons/hi';
 import RequirementField from './RequirementField';
+import IconBtn from "../../../../common/IconBtn"
+import toast from 'react-hot-toast';
+import { setCourse , setStep} from "../../../../../slices/courseSlice"
+import {COURSE_STATUS} from "../../../../../utils/constants"
+
 
 const CourseInformationForm = () => {
+  const {token}= useSelector((state)=> state.auth)
 
   const {
     register,
@@ -15,6 +21,8 @@ const CourseInformationForm = () => {
     formState:{errors},
 
   }=useForm();
+  // const {step,setStep}= useSelector((state)=>state.course)
+
 
   const dispatch=useDispatch();
   const {course,editCourse} =useSelector((state)=> state.course)
@@ -34,7 +42,7 @@ const CourseInformationForm = () => {
       setValue("courseTitle",course.courseName);
       setValue("courseShortDesc",course.courseDescription);
       setValue("coursePrice",course.price);
-      setValue("courseTags",course.tag);
+      // setValue("courseTags",course.tag);
       setValue("courseBenefits",course.whatYouWillLearn);
       setValue("courseCategory",course.category);
       setValue("courseRequirements",course.instructions);
@@ -44,9 +52,79 @@ const CourseInformationForm = () => {
     } 
     getCategories();
   },[])
+  const isFormUpdated=()=>{
+    const currentValues=getValues();
+    if(currentValues.courseTitle!==course.courseName ||
+        currentValues.courseShortDesc!==course.courseDescription ||
+        currentValues.course.price!== course.price ||
+        // currentValues.courseTags.toString() !==course.tags.toString() ||¯
+        currentValues.courseCategory!==course.courseCategory._id ||
+        currentValues.courseBenfits!==course.whatYouWillLearn ||
+        // currentValues.courseImage!==course.thumbnail||
+        currentValues.courseRequirements.toString()!==course.instructions.toString()
+    ){
+      return true;
+    }
+    else return false;
+  }
 
   const onSumbit=async(data)=>{
+    if(editCourse){
+      if(isFormUpdated()){
+        const currentValues=getValues();
+        const formData=new FormData();
+        formData.append("courseId",course._id);
+        if(currentValues.courseTitle!==course.courseName){
+          formData.append("courseName",data.courseTitle)
+        }
+        if(currentValues.courseShortDesc!==course.courseDescription){
+          formData.append("courseDescription",data.courseShortDesc)
+        }
+        if(currentValues.coursePrice!==course.price){
+          formData.append("coursePrice",data.coursePrice)
+        }
+        if(currentValues.courseBenfits!==course.whatYouWillLearn){
+          formData.append("whatYouWillLearn",data.courseBenfits)
+        }
+        if(currentValues.courseCategory._id!==course.category._id){
+          formData.append("category",data.courseCategory)
+        }
+        if(currentValues.courseRequirements!==course.instructions.toString()){
+          formData.append("instructions",JSON.stringify(data.courseRequirements))
+        }
+      
+        setLoading(true)
+        const result=await editCourseDetails(formData,token);
+        setLoading(false)
+        if(result){
+          setStep(2);
+          dispatch(setCourse(result))
+        }
+      
+      }
+      else{
+        toast.error("No changes made to the form")
+      }   
+      return;   
+    }
+    const formData=new FormData();
+    formData.append("courseName",data.courseTitle)
+    formData.append("courseDescription",data.courseShortDesc)
+    formData.append("coursePrice",data.coursePrice)
+    formData.append("whatYouWillLearn",data.courseBenfits)
+    formData.append("category",data.courseCategory)
+    formData.append("instructions",JSON.stringify(data.courseRequirements))
+    formData.append("status",COURSE_STATUS.DRAFT);
 
+    setLoading(true);
+    const result=await addCourseDetails(formData,token)
+    if(result){
+      setStep(2);
+      dispatch(setCourse(result));
+    }
+    setLoading(false);
+    console.log("Printing set Loading ",formData)
+    console.log("Printing result ",result)
   }
 
   return (
@@ -55,6 +133,7 @@ const CourseInformationForm = () => {
       className=' rounded-md border-richblack-700 bg-richblack-800 p-6 space-y-8'
     >
       <div>
+
         <label htmlFor='courseTitle'>Course Title <sup>*</sup></label>
         <input
           id='courseTitle'
@@ -170,6 +249,25 @@ const CourseInformationForm = () => {
         setValue={setValue}
         getValues={getValues}
       />
+      
+      <div>
+        {
+          editCourse && (
+            <button
+            onClick={()=>dispatch(setStep(2))}
+            className='felx items-center gap-x-2 bg-brown-300'
+            >
+                Continue wihtout saving
+            </button>
+          )
+        }
+
+        <IconBtn
+          text={!editCourse ? "Next" :"Save Changes"}
+          
+        />
+
+      </div>
 
 
 

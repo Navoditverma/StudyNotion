@@ -8,15 +8,20 @@ const {uploadImageToCloud}=require("../utils/imageUploader") ;
 
 exports.createCourse= async ( req,res)=>{
     try{
-        //Fetvch Data
-        console.log("Reached herers")
-        const {courseName,courseDescription,whatYouWillLearn,price,tag,category}= req.body;
+        //Fetvch Datakjkjjk
+        console.log("Reached hereasdfars")
+        const {courseName,courseDescription,whatYouWillLearn,price,
+            // tag,
+            category}= req.body;
 
         //get Thumbnail;
-        const thumbnail=req.files.thumbnailImage;
+        // const thumbnail=req.files.thumbnailImage;
 
         //validation
-        if(!courseName || !courseDescription || !price || !whatYouWillLearn || !tag ||!thumbnail ||
+        console.log(courseName,courseDescription,price,whatYouWillLearn,category,"checkpoooooint")
+        
+        if(!courseName || !courseDescription || !price || !whatYouWillLearn || 
+        //     !tag ||!thumbnail ||
 			!category){
             return res.status(400).json({
                 success:false,
@@ -55,7 +60,7 @@ exports.createCourse= async ( req,res)=>{
         console.log("Reached 4")
         
         //Upload Image to cloudinary
-        const thumbnailImgage=await uploadImageToCloud(thumbnail,process.env.FOLDER_NAME)
+        // const thumbnailImgage=await uploadImageToCloud(thumbnail,process.env.FOLDER_NAME)
 
         //create an entry for new course
         console.log("Reached 5" + instructorDetails._id)
@@ -65,9 +70,9 @@ exports.createCourse= async ( req,res)=>{
             instructor:instructorDetails._id,
             whatYouWillLearn:whatYouWillLearn,
             price,
-            tag:tag,
+            // tag:tag,
             category: categoryDetails._id,
-            thumbnail:thumbnailImgage.secure_url,
+            // thumbnail:thumbnailImgage.secure_url,
         })
 
         

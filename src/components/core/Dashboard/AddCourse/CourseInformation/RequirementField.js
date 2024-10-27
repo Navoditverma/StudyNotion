@@ -1,8 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react';
 const RequirementField = ({name,label,register,errors,setValue,getValue}) => {
     const [ requirement , setRequirement]= useState("");
     const[ requirementList,setRequirementList]=useState([]);
+
+
+    useEffect(()=>{
+        register(name,{
+            required:true,
+            validate:(value)=> value.length>0
+        })
+    },[])
+    useEffect(()=>{
+        setValue(name,requirementList)
+    },[requirementList])
     
     const handleAddRequirement=()=>{
         if(requirement){
@@ -48,7 +59,7 @@ const RequirementField = ({name,label,register,errors,setValue,getValue}) => {
                                 <span>{req}</span>
                                 <button
                                     type='button'
-                                    onClick={handleRemoveRequirement}
+                                    onClick={()=>handleRemoveRequirement(index)}
                                     className='text-sm text-pure-greys-300 '
                                 >
                                 clear
@@ -60,6 +71,11 @@ const RequirementField = ({name,label,register,errors,setValue,getValue}) => {
                 </ul>
             )
         }
+        {/* { errors[name] && (
+            <span>{label} is required</span>
+            )
+        } */}
+        
     </div>
   ) 
 }
