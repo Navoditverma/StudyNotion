@@ -54,9 +54,10 @@ const CourseInformationForm = () => {
   },[])
   const isFormUpdated=()=>{
     const currentValues=getValues();
+    console.log("id:",currentValues.courseCategory._id)
     if(currentValues.courseTitle!==course.courseName ||
         currentValues.courseShortDesc!==course.courseDescription ||
-        currentValues.course.price!== course.price ||
+        currentValues.coursePrice!== course.price ||
         // currentValues.courseTags.toString() !==course.tags.toString() ||¯
         currentValues.courseCategory!==course.courseCategory._id ||
         currentValues.courseBenfits!==course.whatYouWillLearn ||
@@ -108,15 +109,20 @@ const CourseInformationForm = () => {
       return;   
     }
     const formData=new FormData();
+    console.log("id",data.courseCategory)
     formData.append("courseName",data.courseTitle)
     formData.append("courseDescription",data.courseShortDesc)
     formData.append("coursePrice",data.coursePrice)
-    formData.append("whatYouWillLearn",data.courseBenfits)
+    formData.append("whatYouWillLearn",data.courseBenefits)
     formData.append("category",data.courseCategory)
     formData.append("instructions",JSON.stringify(data.courseRequirements))
     formData.append("status",COURSE_STATUS.DRAFT);
 
     setLoading(true);
+    console.log("formdata before");
+    formData.forEach((value, key) => {
+      console.log(key, value);
+  });
     const result=await addCourseDetails(formData,token)
     if(result){
       setStep(2);
@@ -192,7 +198,7 @@ const CourseInformationForm = () => {
           <option value="" disabled>Choose a Category</option>
           {
             !loading && courseCategories.map((category,index)=>(
-                <option key={index} value={category?.id}>{category?.name}</option>
+                <option key={index} value={category?._id}>{category?.name}</option>
             ))
           }
         </select>
@@ -234,7 +240,7 @@ const CourseInformationForm = () => {
           className='mih-h-[130px] w-full'
         />
         {
-          errors.courseBenfits && (
+          errors.courseBenefits && (
             <span>
               Benefits of the course are required
             </span>
@@ -255,7 +261,7 @@ const CourseInformationForm = () => {
           editCourse && (
             <button
             onClick={()=>dispatch(setStep(2))}
-            className='felx items-center gap-x-2 bg-brown-300'
+            className='flex items-center gap-x-2 bg-brown-300'
             >
                 Continue wihtout saving
             </button>

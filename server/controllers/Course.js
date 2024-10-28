@@ -10,7 +10,7 @@ exports.createCourse= async ( req,res)=>{
     try{
         //Fetvch Datakjkjjk
         console.log("Reached hereasdfars")
-        const {courseName,courseDescription,whatYouWillLearn,price,
+        const {courseName,courseDescription,whatYouWillLearn,coursePrice,
             // tag,
             category}= req.body;
 
@@ -18,9 +18,9 @@ exports.createCourse= async ( req,res)=>{
         // const thumbnail=req.files.thumbnailImage;
 
         //validation
-        console.log(courseName,courseDescription,price,whatYouWillLearn,category,"checkpoooooint")
+        console.log(courseName,courseDescription,coursePrice,whatYouWillLearn,category,"checkpoooooint")
         
-        if(!courseName || !courseDescription || !price || !whatYouWillLearn || 
+        if(!courseName || !courseDescription || !coursePrice || !whatYouWillLearn || 
         //     !tag ||!thumbnail ||
 			!category){
             return res.status(400).json({
@@ -49,8 +49,10 @@ exports.createCourse= async ( req,res)=>{
         console.log("Reached 3")
 
         //check given tag is valid or ont
+        console.log("category:",category)
 
         const categoryDetails = await Category.findById(category);
+        console.log(categoryDetails)
 		if (!categoryDetails) {
 			return res.status(404).json({ 
 				success: false,
@@ -69,7 +71,7 @@ exports.createCourse= async ( req,res)=>{
             courseDescription,
             instructor:instructorDetails._id,
             whatYouWillLearn:whatYouWillLearn,
-            price,
+            coursePrice,
             // tag:tag,
             category: categoryDetails._id,
             // thumbnail:thumbnailImgage.secure_url,
