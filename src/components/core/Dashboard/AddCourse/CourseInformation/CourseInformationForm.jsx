@@ -10,10 +10,10 @@ import { setCourse , setStep} from "../../../../../slices/courseSlice"
 import {COURSE_STATUS} from "../../../../../utils/constants"
 
 
-const CourseInformationForm = () => {
+  const CourseInformationForm = () => {
   const {token}= useSelector((state)=> state.auth)
 
-  const {
+  const {  
     register,
     handleSubmit,
     setValue,
@@ -98,7 +98,7 @@ const CourseInformationForm = () => {
         const result=await editCourseDetails(formData,token);
         setLoading(false)
         if(result){
-          setStep(2);
+          dispatch(setStep(2));
           dispatch(setCourse(result))
         }
       
@@ -125,7 +125,7 @@ const CourseInformationForm = () => {
   });
     const result=await addCourseDetails(formData,token)
     if(result){
-      setStep(2);
+      dispatch(setStep(2));
       dispatch(setCourse(result));
     }
     setLoading(false);
