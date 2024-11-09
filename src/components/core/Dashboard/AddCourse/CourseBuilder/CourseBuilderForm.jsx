@@ -6,20 +6,29 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
 import {BiRightArrow} from "react-icons/bi"
 import {setCourse, setEditCourse,setStep} from "../../../../../slices/courseSlice"
-import {updateSection} from "../../.././../../services/operations/courseAPI"
+import {getFullDetailsOfCourse, updateSection} from "../../.././../../services/operations/courseAPI"
 import toast from 'react-hot-toast';
 import { createSection } from '../../.././../../services/operations/courseAPI';
 import NestedView from './NestedView';
 
 const CourseBuilderForm = () => {
   const {token} =useSelector((state)=>state.auth)
-  const {register,
+  const {course}=useSelector((state)=>state.course)
+  const[loading,setLoading]=useState(false);
+  const dispatch=useDispatch();
+  const [editSectionName,setEditSectionName]=useState(null);
+  // const courseData =  getFullDetailsOfCourse(course._id,token)
+  // console.log("yeh delkho maalik",courseData)
+  console.log(course)
+
+
+  const {
+          register,
           handleSubmit,
           setValue,
           formState:{errors},
   }=useForm();
-  const[loading,setLoading]=useState(false);
-  const dispatch=useDispatch();
+ 
 
 
   const cancelEdit=()=>{
@@ -27,7 +36,8 @@ const CourseBuilderForm = () => {
     setValue("sectionName","");
   }
 
-  const onSubmit=async(data)=>{
+  const onSubmit= async (data)=>{
+   
     setLoading(true);
     let result;
     if(editSectionName){
@@ -35,7 +45,7 @@ const CourseBuilderForm = () => {
         {
           sectionName:data.sectionName,
           sectionId:editSectionName,
-          courseId:course
+          courseId:course._id
         },token 
       )
     }
@@ -50,15 +60,16 @@ const CourseBuilderForm = () => {
 
 
     if(result){
+      console.log(course)
       dispatch(setCourse(result))
       setEditSectionName(null);
-      setValue("sectionName")
+      setValue("sectionName","")
     }
     setLoading(false)
 
     
   }
-  const handleChangeEditSection=(sectionId,sectionName)=>{
+  const handleChangeEditSection=(sectionId,sectionName)=>{ 
     if(setEditSectionName===sectionId){
       cancelEdit();
       return;
@@ -70,7 +81,7 @@ const CourseBuilderForm = () => {
 
 
 
-  const {course}=useSelector((state)=>state.course)
+  
 
   const goToNext=()=>{
     if(course.courseContent.length===0){
@@ -92,39 +103,38 @@ const CourseBuilderForm = () => {
 
 
 
-  const [editSectionName,setEditSectionName]=useState(null);
 
   return (
-    <div>
-      <p>Course Builder</p>
-      <form onSubmit={handleSubmit(onsubmit)}>
-        <div>
-          <label>Sectin Name<sup>*</sup></label>
+    <div className="space-y-8 rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-6">
+      <p className="text-2xl font-semibold text-richblack-5">Course Builder</p>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div className="flex flex-col space-y-2">
+          <label className="text-sm text-richblack-5" >Section Name<sup className="text-pink-200">*</sup></label>
           <input
             id="sectionName"
             placeholder='Add section'
             {...register("sectionName",{required:true})}
-            className='w-full'
+            className="form-style w-full"
           />
           {
             errors.sectionName && (
-              <span>Section Name is required</span>
+              <span className="ml-2 text-xs tracking-wide text-pink-200">Section Name is required</span>
             )
           }
         </div>
-        <div className='mt-10'>
+        <div className="flex items-end gap-x-4">
           <IconBtn
           type="submit"
           text={editSectionName ? "Edit Section Name" : "Create section"}
           outline={true}
           customClasses={"text-black "}
           >
-            <IoMdAddCircleOutline className='' />
+            <IoMdAddCircleOutline className="text-yellow-50" />
           </IconBtn>
           {editSectionName && (
             <button
             onClick={cancelEdit}
-            className='text-sm text-richblack-300 underline '
+            className="text-sm text-richblack-300 underline"
             type='button '
             >
               Cancel Edit
@@ -133,13 +143,15 @@ const CourseBuilderForm = () => {
         </div>
       </form>
 
-      {course.courseContent.length >0 && (
-        <NestedView handleChangeEditSectionName={handleChangeEditSection}/>
-      )}
-      <div className='flex justify-end gap-x-3'>
+        {course?.courseContent?.length >0 && (
+          <NestedView handleChangeEditSectionName={handleChangeEditSection}/>
+        )}
+
+      
+      <div className="flex justify-end gap-x-3">
         <button
         onclick={goBack}
-        className='rounded-md cursor-pointer flex items-center '
+        className={`flex cursor-pointer items-center gap-x-2 rounded-md bg-richblack-300 py-[8px] px-[20px] font-semibold text-richblack-900`}
         >
           Back
         </button>
