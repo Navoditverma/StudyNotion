@@ -11,17 +11,17 @@ exports.createCourse= async ( req,res)=>{
         //Fetvch Datakjkjjk
         console.log("Reached hereasdfars")
         const {courseName,courseDescription,whatYouWillLearn,coursePrice,
-            // tag,
+            tag,
             category}= req.body;
 
-        //get Thumbnail;
-        // const thumbnail=req.files.thumbnailImage;
+        // get Thumbnail;
+        const thumbnail=req.files.thumbnailImage;
 
-        //validation
-        console.log(courseName,courseDescription,coursePrice,whatYouWillLearn,category,"checkpoooooint")
+        //validation 
+        console.log(courseName,courseDescription,coursePrice,whatYouWillLearn,tag,thumbnail,category,"checkpoooooint")
         
         if(!courseName || !courseDescription || !coursePrice || !whatYouWillLearn || 
-        //     !tag ||!thumbnail ||
+            !tag ||!thumbnail ||
 			!category){
             return res.status(400).json({
                 success:false,
@@ -62,7 +62,7 @@ exports.createCourse= async ( req,res)=>{
         console.log("Reached 4")
         
         //Upload Image to cloudinary
-        // const thumbnailImgage=await uploadImageToCloud(thumbnail,process.env.FOLDER_NAME)
+        const thumbnailImgage=await uploadImageToCloud(thumbnail,process.env.FOLDER_NAME)
 
         //create an entry for new course
         console.log("Reached 5" + instructorDetails._id)
@@ -72,9 +72,9 @@ exports.createCourse= async ( req,res)=>{
             instructor:instructorDetails._id,
             whatYouWillLearn:whatYouWillLearn,
             coursePrice,
-            // tag:tag,
+            tag:tag,
             category: categoryDetails._id,
-            // thumbnail:thumbnailImgage.secure_url,
+            thumbnail:thumbnailImgage.secure_url,
         })
 
         
@@ -112,12 +112,6 @@ exports.createCourse= async ( req,res)=>{
             data:newCourse,
             message:"Course Added Succesfullyy"
         })
-        
-
-
-
-
-
     }
     catch(error){
         return res.status(400).json({

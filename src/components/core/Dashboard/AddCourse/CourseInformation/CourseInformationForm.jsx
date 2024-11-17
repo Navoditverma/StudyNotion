@@ -8,6 +8,8 @@ import IconBtn from "../../../../common/IconBtn"
 import toast from 'react-hot-toast';
 import { setCourse , setStep} from "../../../../../slices/courseSlice"
 import {COURSE_STATUS} from "../../../../../utils/constants"
+import ChipInput from './ChipInput';
+import Upload from '../Upload';
 
 
   const CourseInformationForm = () => {
@@ -42,7 +44,7 @@ import {COURSE_STATUS} from "../../../../../utils/constants"
       setValue("courseTitle",course.courseName);
       setValue("courseShortDesc",course.courseDescription);
       setValue("coursePrice",course.price);
-      // setValue("courseTags",course.tag);
+      setValue("courseTags",course.tag);
       setValue("courseBenefits",course.whatYouWillLearn);
       setValue("courseCategory",course.category);
       setValue("courseRequirements",course.instructions);
@@ -58,11 +60,13 @@ import {COURSE_STATUS} from "../../../../../utils/constants"
     if(currentValues.courseTitle!==course.courseName ||
         currentValues.courseShortDesc!==course.courseDescription ||
         currentValues.coursePrice!== course.price ||
-        // currentValues.courseTags.toString() !==course.tags.toString() ||¯
+        currentValues.courseTags.toString() !==course.tags.toString() ||
         currentValues.courseCategory!==course.courseCategory._id ||
         currentValues.courseBenfits!==course.whatYouWillLearn ||
-        // currentValues.courseImage!==course.thumbnail||
-        currentValues.courseRequirements.toString()!==course.instructions.toString()
+        currentValues.courseImage!==course.thumbnail||
+        currentValues.courseRequirements.toString()!==course.instructions.toString()||
+        currentValues.courseImage !== course.thumbnail
+
     ){
       return true;
     }
@@ -87,11 +91,17 @@ import {COURSE_STATUS} from "../../../../../utils/constants"
         if(currentValues.courseBenfits!==course.whatYouWillLearn){
           formData.append("whatYouWillLearn",data.courseBenfits)
         }
+        if (currentValues.courseTags.toString() !== course.tag.toString()) {
+          formData.append("tag", JSON.stringify(data.courseTags))
+        }
         if(currentValues.courseCategory._id!==course.category._id){
           formData.append("category",data.courseCategory)
         }
         if(currentValues.courseRequirements!==course.instructions.toString()){
           formData.append("instructions",JSON.stringify(data.courseRequirements))
+        }
+        if (currentValues.courseImage !== course.thumbnail) {
+          formData.append("thumbnailImage", data.courseImage)
         }
       
         setLoading(true)
@@ -114,9 +124,12 @@ import {COURSE_STATUS} from "../../../../../utils/constants"
     formData.append("courseDescription",data.courseShortDesc)
     formData.append("coursePrice",data.coursePrice)
     formData.append("whatYouWillLearn",data.courseBenefits)
+    formData.append("tag", JSON.stringify(data.courseTags))
     formData.append("category",data.courseCategory)
     formData.append("instructions",JSON.stringify(data.courseRequirements))
     formData.append("status",COURSE_STATUS.DRAFT);
+    formData.append("thumbnailImage", data.courseImage)
+
 
     setLoading(true);
     console.log("formdata before");
@@ -218,7 +231,7 @@ import {COURSE_STATUS} from "../../../../../utils/constants"
       </div>
 
       {/* Tags Component */}
-      {/* <ChipInput
+      <ChipInput
         label="Tags"
         name="courseTags"
         placeholder="Enter Tags and press enter"
@@ -226,17 +239,17 @@ import {COURSE_STATUS} from "../../../../../utils/constants"
         errors={errors}
         setValue={setValue}
         getValues={getValues}
-      /> */}
+      />
 
       {/* Component for uplaoding adn shoring previwe of media */}
-      {/* <Upload
-        name
-        label
-        register
-        errors
-        setValue
-        getValues
-      /> */}
+      <Upload
+         name="courseImage"
+        label="Course Thumbnail"
+        register={register}
+        setValue={setValue}
+        errors={errors}
+        editData={editCourse ? course?.thumbnail : null}
+      />
 
       {/* Benefit of the course */}
       <div  className="flex flex-col space-y-2">

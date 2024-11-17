@@ -50,7 +50,6 @@ const NestedView = ({handleChangeEditSectionName}) => {
     <div>
         <div className='text-richblack-700 rounded p-6 '>
         
-            <div>Yaha aa toh raha hai dekhp</div>
             {course?.courseContent?.map((section)=>(
                 <details key={section._id}  open >
                     <summary className='flex items-center justify-between gap-x-3 border-b-2 '>
@@ -71,8 +70,8 @@ const NestedView = ({handleChangeEditSectionName}) => {
                                     text1:"All the lectures in this section  will be deleted",
                                     btn1Text:"Delete",
                                     btn2Text:"Cancel",
-                                    btn1Handler:()=>{ handleDeleteSection(section.id)},
-                                    btn2Handler:()=>{ setConformationModal(null)}      
+                                    btn1Handler:()=>handleDeleteSubSection(section._id),
+                                            btn2Handler:()=> setConformationModal(null)      
                                 })
                             }}
                             >
@@ -91,7 +90,7 @@ const NestedView = ({handleChangeEditSectionName}) => {
                                 className='flex items-center justify-between gapx4 border-b-2'>
                                     <div>
                                         <RxDropdownMenu/>
-                                        <p>{data.tittle}</p>
+                                        <p>{data.title}</p>
                                     </div>
                                     <div className='felx items-center gap-x-3'
                                     onClick={(e)=>e.stopPropagation}
@@ -107,8 +106,8 @@ const NestedView = ({handleChangeEditSectionName}) => {
                                             text1:"Current Lecture will be deleted",
                                             btn1Text:"Delete",
                                             btn2Text:"Cancel",
-                                            btn1Handler:()=>{ handleDeleteSubSection(data.id,section._id)},
-                                            btn2Handler:()=>{ setConformationModal(null)}      
+                                            btn1Handler:()=>handleDeleteSubSection(data._id,section._id),
+                                            btn2Handler:()=> setConformationModal(null)     
                                             })
                                         }}
                                         >
@@ -135,16 +134,16 @@ const NestedView = ({handleChangeEditSectionName}) => {
 
 
         </div>
-        {/* {
+        {
             addSubSection?  (<SubSectionModal
                 modalData={addSubSection}
                 setModalData={setAddSubSection}
-                edit={true}
+                add={true}
             />) : 
             viewSubSection ? (<SubSectionModal
                 modalData={viewSubSection}
                 setModalData={setViewSubSection}
-                edit={true}
+                view={true}
 
 
             />) : 
@@ -158,10 +157,10 @@ const NestedView = ({handleChangeEditSectionName}) => {
             <div></div>
             }
 
-            {ConformationModal ? 
+            {conformationModal ? 
             (<ConformationModal modalData={conformationModal}/>):
-            (<div></div>)
-            } */}
+            (<></>)
+            }
 
     </div>
   )

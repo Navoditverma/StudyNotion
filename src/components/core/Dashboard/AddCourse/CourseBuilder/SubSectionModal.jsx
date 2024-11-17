@@ -6,7 +6,7 @@ import { createSubSection, updateSection } from '../../../../../services/operati
 import { setCourse } from '../../../../../slices/courseSlice';
 import { RxCross1 } from "react-icons/rx";
 import IconBtn from '../../../../common/IconBtn';
-
+import Upload from '../Upload';
 
 const SubSectionModal = ({
   modalData,
@@ -17,7 +17,7 @@ const SubSectionModal = ({
 }) => { 
 
 
-  const {
+const {
     register,
     handleSubmit,
     setValue,
@@ -89,7 +89,7 @@ const SubSectionModal = ({
       return;
     }
     const formData=new FormData();
-    formData.append("appendId",modalData)
+    formData.append("sectionId",modalData)
     formData.append("title",data.lectureTitle)
     formData.append("description",data.lectureDesc)
     formData.append("video",data.lectureVideo)
@@ -97,8 +97,9 @@ const SubSectionModal = ({
     //call api
     const result=await createSubSection(formData,token);
     if(result){
+      console.log(course.courseContent)
       const updatedCourseContent=await course.courseContent.map((section)=>
-        section._id=modalData.sectonId ? result : section);
+        section._id===modalData ? result : section);
         const updatedCourse={...course,courseContent:updatedCourseContent}
         dispatch(setCourse(updatedCourse))
     }
@@ -118,22 +119,22 @@ const SubSectionModal = ({
           </button>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* <Upload
+          <Upload
               name="lectureVideo"
               label="Lecture Video"
               register={register}
               setValue={setValue}
-              error={errors}
+              errors={errors}
               video={true}
               viewData={view ? modalData.videoUrl:null}
               editData={edit ? modalData.videoUrl:null}
-          /> */}
+          />
           <div>
             <label>Lecture Title</label>
             <input
               id='lectureTitle'
               placeholder='Enter Lecture Title'
-              {...register("LectureTitle",{required:true})}
+              {...register("lectureTitle",{required:true})}
               className='w-full'
             />
             {errors.lectureTitle && (

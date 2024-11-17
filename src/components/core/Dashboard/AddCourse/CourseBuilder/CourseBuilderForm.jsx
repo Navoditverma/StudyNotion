@@ -135,7 +135,7 @@ const CourseBuilderForm = () => {
             <button
             onClick={cancelEdit}
             className="text-sm text-richblack-300 underline"
-            type='button '
+            type='button'
             >
               Cancel Edit
             </button>

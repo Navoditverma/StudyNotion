@@ -10,7 +10,7 @@ const {
   getAllCourses,
   getCourseDetails,
   // getFullCourseDetails,
-  // editCourse,
+  editCourse,
   // getInstructorCourses,
   // deleteCourse,
 } = require("../controllers/Course")
@@ -33,9 +33,9 @@ const {
 // Sub-Sections Controllers Import
 const {
   createSubSection,
-  // updateSubSection,
-  // deleteSubSection,
-} = require("../controllers/Subsection")
+  updateSubSection,
+  deleteSubSection,
+} = require("../controllers/SubSection")
 
 // Rating Controllers Import
 const {
@@ -64,9 +64,9 @@ router.post("/updateSection", auth, isInstructor, updateSection)
 // Delete a Section
 router.post("/deleteSection", auth, isInstructor, deleteSection)
 // Edit Sub Section
-// router.post("/updateSubSection", auth, isInstructor, updateSubSection)
+router.post("/updateSubSection", auth, isInstructor, updateSubSection)
 // Delete Sub Section
-// router.post("/deleteSubSection", auth, isInstructor, deleteSubSection)
+router.post("/deleteSubSection", auth, isInstructor, deleteSubSection)
 // Add a Sub Section to a Section
 router.post("/addSubSection", auth, isInstructor, createSubSection)
 // Get all Registered Courses
@@ -76,7 +76,7 @@ router.post("/getCourseDetails", getCourseDetails)
 // Get Details for a Specific Courses
 // router.post("/getFullCourseDetails", auth, getFullCourseDetails)
 // Edit Course routes
-// router.post("/editCourse", auth, isInstructor, editCourse)
+router.post("/editCourse", auth, isInstructor, editCourse)
 // Get all Courses Under a Specific Instructor
 // router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses)
 // Delete a Course
