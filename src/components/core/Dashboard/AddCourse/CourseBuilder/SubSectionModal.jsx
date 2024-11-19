@@ -101,6 +101,7 @@ const {
       const updatedCourseContent=await course.courseContent.map((section)=>
         section._id===modalData ? result : section);
         const updatedCourse={...course,courseContent:updatedCourseContent}
+        console.log("course dkehlo",updatedCourse)
         dispatch(setCourse(updatedCourse))
     }
     setModalData(null);
@@ -108,17 +109,18 @@ const {
 
   }
   return (
-    <div>
-      <div>
-        <div>
-          <p>
+    <div className="fixed inset-0 z-[1000] !mt-0 grid h-screen w-screen place-items-center overflow-auto bg-white bg-opacity-10 backdrop-blur-sm">
+      <div className="my-10 w-11/12 max-w-[700px] rounded-lg border border-richblack-400 bg-richblack-800">
+        <div className="flex items-center justify-between rounded-t-lg bg-richblack-700 p-5">
+          <p className="text-xl font-semibold text-richblack-5">
             {view && "Viewing"} {add && "Adding"}{edit && "Editing"} Lecture
           </p>
           <button onClick={()=>(!loading? setModalData(null): {})}>
-            <RxCross1/>
+            <RxCross1 className="text-2xl text-richblack-5"/>
           </button>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}
+        className="space-y-8 px-8 py-10">
           <Upload
               name="lectureVideo"
               label="Lecture Video"
@@ -129,36 +131,38 @@ const {
               viewData={view ? modalData.videoUrl:null}
               editData={edit ? modalData.videoUrl:null}
           />
-          <div>
-            <label>Lecture Title</label>
+          <div className="flex flex-col space-y-2">
+            <label className="text-sm text-richblack-5" htmlFor="lectureTitle">Lecture Title</label>
             <input
               id='lectureTitle'
               placeholder='Enter Lecture Title'
               {...register("lectureTitle",{required:true})}
-              className='w-full'
+               className="form-style w-full"
             />
             {errors.lectureTitle && (
-              <span>Lecture Title is reequired</span>
+              <span className="ml-2 text-xs tracking-wide text-pink-200">Lecture Title is reequired</span>
               
             )}
           </div>
-          <div>
-            <label> Lecture Description</label>
+          <div className="flex flex-col space-y-2">
+            <label className="text-sm text-richblack-5" htmlFor="lectureDesc">
+             Lecture Description{" "}<sup className="text-pink-200">*</sup>
+            </label>
             <textarea
               id='lectureDesc'
               placeholder='enter lecture description'
               {...register ("lectureDesc",{required:true})}
-              className="w-full min-h-[130px]"
+              className="form-style resize-x-none min-h-[130px] w-full"
             />
             {
               errors.lectureDesc && (
-                <span> lecture description is required</span>
+                <span className="ml-2 text-xs tracking-wide text-pink-200"> lecture description is required</span>
               )
             }
           </div>
           {
             !view && (
-              <div>
+              <div className="flex justify-end">
                 <IconBtn
                   text={loading ? "Loading...": edit ? "Save Changes" : "Save"}
                 />

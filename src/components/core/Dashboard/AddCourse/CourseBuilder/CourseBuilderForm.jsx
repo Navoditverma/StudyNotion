@@ -19,7 +19,7 @@ const CourseBuilderForm = () => {
   const [editSectionName,setEditSectionName]=useState(null);
   // const courseData =  getFullDetailsOfCourse(course._id,token)
   // console.log("yeh delkho maalik",courseData)
-  console.log(course)
+  // console.log(course)
 
 
   const {
@@ -29,7 +29,7 @@ const CourseBuilderForm = () => {
           formState:{errors},
   }=useForm();
  
-
+ 
 
   const cancelEdit=()=>{
     setEditSectionName(null);
@@ -69,7 +69,7 @@ const CourseBuilderForm = () => {
 
     
   }
-  const handleChangeEditSection=(sectionId,sectionName)=>{ 
+  const handleChangeEditSectionName=(sectionId,sectionName)=>{ 
     if(setEditSectionName===sectionId){
       cancelEdit();
       return;
@@ -144,7 +144,7 @@ const CourseBuilderForm = () => {
       </form>
 
         {course?.courseContent?.length >0 && (
-          <NestedView handleChangeEditSectionName={handleChangeEditSection}/>
+          <NestedView handleChangeEditSectionName={handleChangeEditSectionName}/>
         )}
 
       
@@ -155,7 +155,7 @@ const CourseBuilderForm = () => {
         >
           Back
         </button>
-        <IconBtn text="Next" onclick={goToNext} >
+        <IconBtn disabled={loading}  text="Next" onclick={goToNext} >
           <BiRightArrow/>
         </IconBtn>
       </div>

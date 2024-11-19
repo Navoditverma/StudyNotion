@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ConformationModal from "../../../../common/ConformationModal"
 import { useDispatch, useSelector } from 'react-redux' 
 import { RxDropdownMenu } from "react-icons/rx";
@@ -45,23 +45,24 @@ const NestedView = ({handleChangeEditSectionName}) => {
         setConformationModal(null);
 
     }
-
+   
   return (
     <div>
-        <div className='text-richblack-700 rounded p-6 '>
+        <div className="rounded-lg bg-richblack-700 p-6 px-8"
+        id="nestedViewContainer">
         
             {course?.courseContent?.map((section)=>(
                 <details key={section._id}  open >
-                    <summary className='flex items-center justify-between gap-x-3 border-b-2 '>
-                        <div>
-                            <RxDropdownMenu/>
-                            <p>{section.sectionName}</p>
+                    <summary  className="flex cursor-pointer items-center justify-between border-b-2 border-b-richblack-600 py-2">
+                        <div className="flex items-center gap-x-3">
+                            <RxDropdownMenu className="text-2xl text-richblack-50"/>
+                            <p className="font-semibold text-richblack-50">{section.sectionName}</p>
                         </div>
-                        <div className='flex items-center '>   
+                        <div className="flex items-center gap-x-3">   
                             <button
-                            onClick={handleChangeEditSectionName(section._id,section.sectionName)}
+                            onClick={()=>handleChangeEditSectionName(section._id,section.sectionName)}
                             >
-                                <MdEdit/>
+                                <MdEdit className="text-xl text-richblack-300"/>
                             </button>
                             <button
                             onClick={()=>{
@@ -70,35 +71,34 @@ const NestedView = ({handleChangeEditSectionName}) => {
                                     text1:"All the lectures in this section  will be deleted",
                                     btn1Text:"Delete",
                                     btn2Text:"Cancel",
-                                    btn1Handler:()=>handleDeleteSubSection(section._id),
+                                    btn1Handler:()=>handleDeleteSection(section._id),
                                             btn2Handler:()=> setConformationModal(null)      
                                 })
                             }}
                             >
-                                <RiDeleteBin6Fill />
+                                <RiDeleteBin6Fill className="text-xl text-richblack-300" />
                             </button>
-                            <span>|</span>
-                            <button><IoMdArrowDropdown  className='text-xl text-richblack-100'/></button>
-
+                            <span className="font-medium text-richblack-300">|</span>
+                            <IoMdArrowDropdown  className={`text-xl text-richblack-300`}/>
                         </div>
                     </summary>
 
-                    <div>
+                    <div  className="px-6 pb-4">
                         {
-                            section.subSection.map((data)=>{
+                            section.subSection.map((data)=>(
                                 <div key={data.id} onClick={()=>setViewSubSection(data)}
-                                className='flex items-center justify-between gapx4 border-b-2'>
-                                    <div>
-                                        <RxDropdownMenu/>
-                                        <p>{data.title}</p>
+                                 className="flex cursor-pointer items-center justify-between gap-x-3 border-b-2 border-b-richblack-600 py-2">
+                                    <div className="flex items-center gap-x-3 py-2 ">
+                                        <RxDropdownMenu className="text-2xl text-richblack-50" />
+                                        <p className="font-semibold text-richblack-50">{data.title}</p>
                                     </div>
-                                    <div className='felx items-center gap-x-3'
+                                    <div className="flex items-center gap-x-3"
                                     onClick={(e)=>e.stopPropagation}
                                     >
                                         <button
                                         onClick={()=>setEditSubSection({...data,sectionId:section._id})}
                                         >
-                                            <MdEdit/>
+                                            <MdEdit className="text-xl text-richblack-300" />
                                         </button>
                                         <button
                                         onClick={()=>{setConformationModal({
@@ -111,20 +111,20 @@ const NestedView = ({handleChangeEditSectionName}) => {
                                             })
                                         }}
                                         >
-                                          <RiDeleteBin6Fill />
+                                          <RiDeleteBin6Fill className="text-xl text-richblack-300"  />
                                         </button>
 
 
                                     </div>
 
                                 </div>
-                            })
+                            ))
                         }
                         <button
                          onClick={()=>setAddSubSection(section._id)}
-                         className='mt-5 flex items-center gap-x-2'
+                         className="mt-3 flex items-center gap-x-1 text-yellow-50"
                          >
-                            <FaPlus />
+                            <FaPlus  className="text-lg"  />
                             <p>Add lecture</p>
                         </button>
                     </div>

@@ -11,8 +11,7 @@ const MyProfile = () => {
     const navigate=useNavigate(); 
 
   return (
-    <div className='w-[700px] overscroll-y-none  ml-9
-      '>
+    <>
         <h1 className="mb-14 text-3xl font-medium text-richblack-5">
             My Profile
         </h1>
@@ -109,7 +108,7 @@ const MyProfile = () => {
                 </div>
             </div>
         </div>
-    </div>
+    </>
   )
 }
 

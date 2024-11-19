@@ -10,32 +10,50 @@ exports.createCourse= async ( req,res)=>{
     try{
         //Fetvch Datakjkjjk
         console.log("Reached hereasdfars")
-        const {courseName,courseDescription,whatYouWillLearn,coursePrice,
-            tag,
-            category}= req.body;
-
+        const userId = req.user.id
+        let {
+          courseName,
+          courseDescription,
+          whatYouWillLearn,
+          coursePrice,
+          tag: _tag,
+          category,
+          status,
+          instructions: _instructions,
+        } = req.body
+        
         // get Thumbnail;
         const thumbnail=req.files.thumbnailImage;
+        const tag = JSON.parse(_tag)
+        const instructions = JSON.parse(_instructions)
 
         //validation 
         console.log(courseName,courseDescription,coursePrice,whatYouWillLearn,tag,thumbnail,category,"checkpoooooint")
         
-        if(!courseName || !courseDescription || !coursePrice || !whatYouWillLearn || 
-            !tag ||!thumbnail ||
-			!category){
+        if(
+          !courseName 
+          || !courseDescription 
+          || !coursePrice 
+          || !whatYouWillLearn 
+          || !tag 
+          ||!thumbnail 
+          || !instructions.length
+          || !category){
             return res.status(400).json({
                 success:false,
                 message:"All Fields are required"
             })
         }
+        if (!status || status === undefined) {
+          status = "Draft"
+        }
         console.log("Reached 2")
 
         //check for Validation
-        const userId=req.user.id;
         console.log(userId)
         const instructorDetails = await User.findById(userId, {
-			accountType: "Instructor",
-		});
+			                                    accountType: "Instructor",
+		                                      });
         console.log("Instructor Details:",instructorDetails);
 
 
@@ -53,12 +71,12 @@ exports.createCourse= async ( req,res)=>{
 
         const categoryDetails = await Category.findById(category);
         console.log(categoryDetails)
-		if (!categoryDetails) {
-			return res.status(404).json({ 
-				success: false,
-				message: "Category Details Not Found",
-			});
-		}
+        if (!categoryDetails) {
+          return res.status(404).json({ 
+            success: false,
+            message: "Category Details Not Found",
+          });
+        }
         console.log("Reached 4")
         
         //Upload Image to cloudinary
@@ -74,7 +92,9 @@ exports.createCourse= async ( req,res)=>{
             coursePrice,
             tag:tag,
             category: categoryDetails._id,
-            thumbnail:thumbnailImgage.secure_url,
+            thumbnail: thumbnailImgage.secure_url,
+            status: status,
+            instructions,
         })
 
         
@@ -231,7 +251,7 @@ exports.editCourse = async (req, res) => {
       if (req.files) {
         console.log("thumbnail update")
         const thumbnail = req.files.thumbnailImage
-        const thumbnailImage = await uploadImageToCloudinary(
+        const thumbnailImage = await uploadImageToCloud(
           thumbnail,
           process.env.FOLDER_NAME
         )
