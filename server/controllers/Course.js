@@ -3,6 +3,8 @@ const Course=require("../models/Course")
 const Category=require("../models/Category")
 const User=require("../models/User")  
 const {uploadImageToCloud}=require("../utils/imageUploader") ;
+const Section=require("../models/Section")
+const SubSection=require("../models/SubSection")
 
 //createCourese Handler
 
@@ -89,7 +91,7 @@ exports.createCourse= async ( req,res)=>{
             courseDescription,
             instructor:instructorDetails._id,
             whatYouWillLearn:whatYouWillLearn,
-            coursePrice,
+            price:coursePrice,
             tag:tag,
             category: categoryDetails._id,
             thumbnail: thumbnailImgage.secure_url,
@@ -114,14 +116,14 @@ exports.createCourse= async ( req,res)=>{
         )
         console.log("Reached 7")
         await Category.findByIdAndUpdate(
-			{ _id: category },
-			{
-				$push: {
-					course: newCourse._id,
-				},
-			},
-			{ new: true }
-		);
+          { _id: category },
+          {
+            $push: {
+              courses: newCourse._id,
+            },
+          },
+          { new: true }
+        );
         
 
         //upadte the tag ka schema HW
@@ -148,7 +150,7 @@ exports.createCourse= async ( req,res)=>{
 exports.getAllCourses=async (req, res)=>{
     try{
         const allCourses=await Course.find({},{courseName:true,
-                                            price:true,
+                                            coursePrice:true,
                                             thumbnail:true,
                                             instructor:true,
                                             ratingAndReviews:true,
@@ -328,12 +330,12 @@ exports.getFullCourseDetails = async (req, res) => {
       })
       .exec()
 
-    let courseProgressCount = await CourseProgress.findOne({
-      courseID: courseId,
-      userId: userId,
-    })
+    // let courseProgressCount = await CourseProgress.findOne({
+    //   courseID: courseId,
+    //   userId: userId,
+    // })
 
-    console.log("courseProgressCount : ", courseProgressCount)
+    // console.log("courseProgressCount : ", courseProgressCount)
 
     if (!courseDetails) {
       return res.status(400).json({
@@ -349,30 +351,106 @@ exports.getFullCourseDetails = async (req, res) => {
     //   });
     // }
 
-    let totalDurationInSeconds = 0
-    courseDetails.courseContent.forEach((content) => {
-      content.subSection.forEach((subSection) => {
-        const timeDurationInSeconds = parseInt(subSection.timeDuration)
-        totalDurationInSeconds += timeDurationInSeconds
-      })
-    })
+    // let totalDurationInSeconds = 0
+    // courseDetails.courseContent.forEach((content) => {
+    //   content.subSection.forEach((subSection) => {
+    //     const timeDurationInSeconds = parseInt(subSection.timeDuration)
+    //     totalDurationInSeconds += timeDurationInSeconds
+    //   })
+    // })
 
-    const totalDuration = convertSecondsToDuration(totalDurationInSeconds)
+    // const totalDuration = convertSecondsToDuration(totalDurationInSeconds)
 
     return res.status(200).json({
       success: true,
-      data: {
-        courseDetails,
-        totalDuration,
-        completedVideos: courseProgressCount?.completedVideos
-          ? courseProgressCount?.completedVideos
-          : [],
-      },
+      data: {courseDetails}
+        // courseDetails,
+        // totalDuration,
+      //   completedVideos: courseProgressCount?.completedVideos
+      //     ? courseProgressCount?.completedVideos
+      //     : [],
+      // },
     })
   } catch (error) {
     return res.status(500).json({
       success: false,
       message: error.message,
+    })
+  }
+}
+
+exports.getInstructorCourses = async (req, res) => {
+  try {
+    // Get the instructor ID from the authenticated user or request body
+    const instructorId = req.user.id
+
+    // Find all courses belonging to the instructor
+    const instructorCourses = await Course.find({
+      instructor: instructorId,
+    }).sort({ createdAt: -1 })
+
+    // Return the instructor's courses
+    res.status(200).json({
+      success: true,
+      data: instructorCourses,
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve instructor courses",
+      error: error.message,
+    })
+  }
+}
+exports.deleteCourse = async (req, res) => {
+  try {
+    const { courseId } = req.body
+
+    // Find the course
+    const course = await Course.findById(courseId)
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" })
+    }
+
+    // Unenroll students from the course
+    console.log("Check point 1")
+    const studentsEnrolled = course.studentsEnrolled
+    for (const studentId of studentsEnrolled) {
+      await User.findByIdAndUpdate(studentId, {
+        $pull: { courses: courseId },
+      })
+    }
+
+    // Delete sections and sub-sections
+    const courseSections = course.courseContent
+    for (const sectionId of courseSections) {
+      // Delete sub-sections of the section
+      const section = await Section.findById(sectionId)
+      if (section) {
+        const subSections = section.subSection
+        for (const subSectionId of subSections) {
+          await SubSection.findByIdAndDelete(subSectionId)
+        }
+      }
+
+      // Delete the section
+      await Section.findByIdAndDelete(sectionId)
+    }
+
+    // Delete the course
+    await Course.findByIdAndDelete(courseId)
+
+    return res.status(200).json({
+      success: true,
+      message: "Course deleted successfully",
+    })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message,
     })
   }
 }

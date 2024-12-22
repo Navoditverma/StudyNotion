@@ -35,6 +35,7 @@ const {
       setValue("lectureDesc",modalData.desc)
       setValue("lectureVideo",modalData.videoUrl)
     }
+    console.log(course,view ,edit)
   },[])
   const isFormUpdated=()=>{
     const curretValues=getValues();

@@ -73,10 +73,6 @@ exports.createRating=async (req, res)=>{
         })
     }
 }
-
-
-
-
 //get avg rating
 
 exports.getAverageRating=async (req,res)=>{
@@ -126,9 +122,6 @@ exports.getAverageRating=async (req,res)=>{
     }
 
 }
-
-
-
 // get all rating
 
 exports.getAllRating=async (req,res)=>{

@@ -37,7 +37,6 @@ const CourseBuilderForm = () => {
   }
 
   const onSubmit= async (data)=>{
-   
     setLoading(true);
     let result;
     if(editSectionName){
@@ -54,11 +53,10 @@ const CourseBuilderForm = () => {
         sectionName:data.sectionName,
         courseId:course._id,
       },token)
+      console.log(result)
     }
 
     //Update values
-
-
     if(result){
       console.log(course)
       dispatch(setCourse(result))
