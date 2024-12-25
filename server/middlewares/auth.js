@@ -30,8 +30,7 @@ exports.auth=async (req,res,next)=>{
         catch(err){
             return res.status(405).json({
                 success:false,
-                
-                message:err
+                message:err.message
             })
         }
         next();
@@ -56,6 +55,8 @@ exports.isStudent=async (req, res ,next)=>{
                 message:"This is a protected route for Students only"
             })
         }
+        console.log("student hai")
+        next();
 
     }
     catch(error){
