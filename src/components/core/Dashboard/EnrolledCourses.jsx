@@ -10,7 +10,9 @@ const EnrolledCourses = () => {
     const [enrolledCourses, setEnrolledCourses] = useState(null);
     const getEnrolledCourses=async()=>{
         try{
+            console.log("REACHINIG EG",token)
             const response= await getUserEnrolledCourses(token);
+            console.log("Enrolled COurses",response)
             setEnrolledCourses(response);
         }
         catch(err){

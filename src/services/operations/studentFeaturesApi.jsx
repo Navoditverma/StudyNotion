@@ -65,9 +65,9 @@ export async function buyCourse(token,courses,userDetails,navigate,dispatch) {
             },
             handler: function(response) {
                 //send successful wala mail
-                sendPaymentSuccessEmail(response, orderResponse.data.message.amount,token );
+                //  sendPaymentSuccessEmail(response, orderResponse.data.message.amount,token );
                 //verifyPayment
-                verifyPayment({...response, courses}, token, navigate, dispatch);
+                 verifyPayment({...response, courses}, token, navigate, dispatch);
             }
         }
         
@@ -96,6 +96,8 @@ async function sendPaymentSuccessEmail(response,amount,token){
         },{
             Authorization:`Bearer ${token}`
         })
+        console.log("SP 2")
+
      }
      catch(err){
         console.log("Payment success email error..",err)
@@ -124,9 +126,5 @@ async function verifyPayment(bodyData,token,navigate, dispatch){
     }
     toast.dismiss(toastId);
     dispatch(setPaymentLoading(false));
-
-
-
-      
 
 }
