@@ -5,6 +5,7 @@ const User=require("../models/User")
 const {uploadImageToCloud}=require("../utils/imageUploader") ;
 const Section=require("../models/Section")
 const SubSection=require("../models/SubSection")
+const mongoose=require("mongoose")
 
 //createCourese Handler
 
@@ -180,9 +181,13 @@ exports.getAllCourses=async (req, res)=>{
 exports.getCourseDetails = async (req, res) => {
     try {
       const { courseId } = req.body
-      const courseDetails = await Course.findOne({
-        _id: courseId,
-      })
+      if (!mongoose.Types.ObjectId.isValid(courseId)) {
+        return res.status(400).json({ error: 'Invalid course ID format.' });
+    }
+
+      console.log("CP 1",courseId)
+
+      const courseDetails = await Course.findById(mongoose.Types.ObjectId(courseId))
         .populate({
           path: "instructor",
           populate: {
@@ -195,17 +200,19 @@ exports.getCourseDetails = async (req, res) => {
           path: "courseContent",
           populate: {
             path: "subSection",
-            select: "-videoUrl",
+            select: "videoUrl",
           },
         })
         .exec()
+        console.log("CP 2",courseDetails)
+
   
-      if (!courseDetails) {
-        return res.status(400).json({
-          success: false,
-          message: `Could not find course with id: ${courseId}`,
-        })
-      }
+        if (!courseDetails) {
+          return res.status(400).json({
+            success: false,
+            message: `Could not find course with id: ${courseId}`,
+          })
+        }
   
       // if (courseDetails.status === "Draft") {
       //   return res.status(403).json({
@@ -223,6 +230,8 @@ exports.getCourseDetails = async (req, res) => {
       })
   
       const totalDuration = convertSecondsToDuration(totalDurationInSeconds)
+      console.log("CP 3")
+
   
       return res.status(200).json({
         success: true,
@@ -232,6 +241,7 @@ exports.getCourseDetails = async (req, res) => {
         },
       })
     } catch (error) {
+      console.log(error.message)
       return res.status(500).json({
         success: false,
         message: error.message,

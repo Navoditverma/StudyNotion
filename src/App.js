@@ -22,7 +22,7 @@ import MyCourses from "./components/core/Dashboard/MyCourses"
 import EditCourse from "./components/core/Dashboard/EditCourse";
 import Catalog from "./pages/Catalog";
 import CourseDetails from "./pages/CourseDetails";
-
+import viewCourse from "./pages/viewCourse";
 function App()  {
   const {user}=useSelector((state)=>state.profile)
   // console.log("user",user)
@@ -66,6 +66,26 @@ function App()  {
       </Route>
       <Route path="catalog/:catalogName" element={<Catalog />} />
       <Route path="courses/:courseId" element={<CourseDetails />} />
+
+      <Route element={
+                      <PrivateRoute>
+                        <viewCourse/>
+                      </PrivateRoute>
+                      }
+      >
+      {
+        user.accountType=== ACCOUNT_TYPE.STUDENT && (
+          <>
+            <Route
+              path="view-course/:courseId/section/:sectionId/sub-section/:subSectionId"
+              element={<VideoDetails/>}
+            />
+          </>
+        )
+      }
+  
+
+      </Route>
 
 
 
