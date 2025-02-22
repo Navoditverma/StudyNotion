@@ -9,6 +9,7 @@ const mongoose = require("mongoose")
 const crypto = require("crypto");
 const { access } = require("fs/promises");
 const { accessSync } = require("fs");
+const {CourseProgress}=require("../models/CourseProgress")
 
 
 

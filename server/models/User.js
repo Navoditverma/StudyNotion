@@ -47,9 +47,9 @@ const userSchema=new mongoose.Schema({
         type:Date
     
     },
-    courseProgess:[
+    courseProgress:[
         {  type:mongoose.Schema.ObjectId,
-           ref:"courseProgess"}
+           ref:"CourseProgress"}
         ]
     
 })

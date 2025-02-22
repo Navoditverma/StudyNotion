@@ -1,7 +1,9 @@
 const Profile=require("../models/Profile")
 const User=require("../models/User")
 const { uploadImageToCloud} = require("../utils/imageUploader");
-
+const { convertSecondsToDuration } = require("../utils/secToDuration")
+const CourseProgress = require("../models/CourseProgress")
+const Course=require("../models/Course")
 
 exports.updateProfile=async (req, res)=>{
     try{
@@ -164,7 +166,7 @@ exports.getEnrolledCourses = async (req, res) => {
         console.log("gec CP 2",userDetails)
 
         userDetails = userDetails.toObject()
-        console.log("gec CP 3",userDetails)
+        console.log("gec CP 3",userDetails, userDetails.courses?.length)
 
         var SubsectionLength = 0
         for (var i = 0; i < userDetails.courses.length; i++) {
@@ -213,10 +215,53 @@ exports.getEnrolledCourses = async (req, res) => {
             success: true,
             data: userDetails.courses,
         })
-        } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: error.message,
-        })
+        } 
+        catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message,
+            })
         }
+}
+
+exports.instructorDashboard= async (req, res)=>{
+    try{
+        console.log("CP 1")
+        const courseDetails= await Course.find({instructor:req.user.id});
+        console.log("CP 2")
+
+        const courseData=courseDetails.map((course)=>{
+            const totalStudentsEnrolled=course.studentsEnrolled.length;
+            const totalAmountGenerated=totalStudentsEnrolled * course.price;
+
+            //create and new object with additional fields
+            const couresDataWithStats={
+                _id: course._id,
+                courseName: course.courseName,
+                courseDescription: course.courseDescription,
+                totalStudentsEnrolled,
+                totalAmountGenerated,
+                
+            }
+            return couresDataWithStats;
+        })
+        console.log("CP 3")
+
+        res.status(200).json({
+            success:true,
+            courses:courseData
+        })
+        
+
     }
+    catch(err){
+        console.error(err);
+        res.status(500).json(
+            {
+                success:false,
+                message:"error in Instructor dashboard function"
+                
+            }
+        )
+    }
+}

@@ -1,8 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet, useParams } from 'react-router-dom'
+import IconBtn from '../components/common/IconBtn';
+import CourseReviewModal from "../components/core/ViewCourse/CourseReviewModal"
+import VideoDetailsSidebar from "../components/core/ViewCourse/VideoDetailsSidebar"
+import { getFullDetailsOfCourse } from "../services/operations/courseAPI"
+import {
+  setCompletedLectures,
+  setCourseSectionData,
+  setEntireCourseData,
+  setTotalNoOfLectures,
+} from "../slices/viewCourseSlice"
 
-const viewCourse = () => {
+
+
+const ViewCourse = () => {
   const {courseId}=useParams();
   const[reviewModal,setReviewModal]=useState(false);
   const {token}=useSelector((state)=>state.auth);
@@ -10,7 +22,7 @@ const viewCourse = () => {
   
   useEffect(()=>{
     const setCourseSpecificDetails=async()=>{
-      const courseData=await getFullDetailsCourse(courseId,token);
+      const courseData=await getFullDetailsOfCourse(courseId,token);
       dispatch(setCourseSpecificDetails(courseData.courseDetails.courseContent))
       dispatch(setEntireCourseData(courseData.courseDetails))
       dispatch(setCompletedLectures(courseData.completedVideos))
@@ -39,4 +51,4 @@ const viewCourse = () => {
   )
 }
 
-export default viewCourse
+export default ViewCourse

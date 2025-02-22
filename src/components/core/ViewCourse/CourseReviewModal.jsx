@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import ReactStars from 'react-stars'
+import { useForm } from 'react-hook-form'
+import IconBtn from "../../common/IconBtn"
+import {createRating} from "../../../services/operations/courseAPI"
 
-const VideoReviewModal = () => {
+const VideoReviewModal = ({ setReviewModal }) => {
 
     const {user}=useSelector((state)=>state.profile)
     const {token}=useSelector((state)=>state.auth)
@@ -39,12 +42,12 @@ const VideoReviewModal = () => {
             <div>
                 <p> Add Review </p>
                 <button
-                onClick={setReviewModal(false)}
+                onClick={()=>setReviewModal(false)}
                 >
                     Close
                 </button>
             </div>
-            {/* MOdal Body */}
+            {/* Modal Body */}
             <div>
                 <div>
                     <img
@@ -78,7 +81,7 @@ const VideoReviewModal = () => {
                         <textarea
                         id="courseExperience"
                         placeholder='Add Your experience here '
-                        {...register="courseExperience" , {required:true}}
+                        {...register("courseExperience" , {required:true})}
                         />
                         {
                             errors.courseExperience && (

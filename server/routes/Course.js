@@ -44,6 +44,10 @@ const {
   getAllRating,
 } = require("../controllers/RatingAndReview")
 
+const{
+  updateCourseProgress
+}=require("../controllers/CourseProgress")
+
 // const {
 //   updateCourseProgress
 // } = require("../controllers/courseProgress");
@@ -81,6 +85,7 @@ router.post("/editCourse", auth, isInstructor, editCourse)
 router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses)
 // Delete a Course
 router.delete("/deleteCourse", deleteCourse)
+router.post("/updateCourseProgress",auth,isStudent,updateCourseProgress)
 
 // router.post("/updateCourseProgress", auth, isStudent, updateCourseProgress);
 

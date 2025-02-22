@@ -6,6 +6,7 @@ const {uploadImageToCloud}=require("../utils/imageUploader") ;
 const Section=require("../models/Section")
 const SubSection=require("../models/SubSection")
 const mongoose=require("mongoose")
+const {convertSecondsToDuration}=require("../utils/secToDuration")
 
 //createCourese Handler
 
@@ -180,14 +181,15 @@ exports.getAllCourses=async (req, res)=>{
 
 exports.getCourseDetails = async (req, res) => {
     try {
-      const { courseId } = req.body
-      if (!mongoose.Types.ObjectId.isValid(courseId)) {
-        return res.status(400).json({ error: 'Invalid course ID format.' });
-    }
+      const courseId = req.body.courseId.courseId || req.body.courseId;
+      console.log("reaching get course details",courseId)
+      // if (!mongoose.Types.ObjectId.isValid(courseId)) {
+      //   return res.status(400).json({ error: 'Invalid course ID format.' });
+      // }
 
       console.log("CP 1",courseId)
 
-      const courseDetails = await Course.findById(mongoose.Types.ObjectId(courseId))
+      const courseDetails = await Course.findById(courseId)
         .populate({
           path: "instructor",
           populate: {
@@ -464,3 +466,4 @@ exports.deleteCourse = async (req, res) => {
     })
   }
 }
+

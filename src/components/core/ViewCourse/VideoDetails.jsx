@@ -2,7 +2,10 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Player } from 'video-react';
-import "~video-react/dist/video-react.css"
+import { useRef,useState } from 'react';
+import IconBtn from '../../common/IconBtn';
+
+// import "~video-react/dist/video-react.css"
 import {AiFillPlayCircle} from "react-icons/ai"
 const VideoDetails = () => { 
   const {courseId,sectionId,subSectionId}=useParams()
@@ -20,7 +23,7 @@ const VideoDetails = () => {
   useEffect(()=>{
     const setVideoSpecificDetails=async()=>{
       if(!courseSectionData.length) return;
-      if(!courseId && !sectionId & !subSectionID){
+      if(!courseId && !sectionId & !subSectionId){
         navigate("/dashboard/enrolled-courses")
       }
       else{
@@ -44,7 +47,7 @@ const VideoDetails = () => {
     const currentSectionIndex=courseSectionData.findIndex(
       (data)=>data._id === sectionId
     )
-    const currentSubSectionIndex=courseSectionData[currentSectionIndex].subSectionId.findIndex(
+    const currentSubSectionIndex=courseSectionData[currentSectionIndex].subSection.findIndex(
       (data)=>data._id === sectionId
 
     )
@@ -61,7 +64,7 @@ const VideoDetails = () => {
       (data)=>data._id === sectionId
     )
     const noOfSubSections=courseSectionData[currentSectionIndex].subSection.length;
-    const currentSubSectionIndex=courseSectionData[currentSectionIndex].subSectionId.findIndex(
+    const currentSubSectionIndex=courseSectionData[currentSectionIndex].subSection.findIndex(
       (data)=>data._id === sectionId
 
     )
@@ -78,7 +81,7 @@ const VideoDetails = () => {
       (data)=>data._id === sectionId
     )
     const noOfSubSections=courseSectionData[currentSectionIndex].subSection.length;
-    const currentSubSectionIndex=courseSectionData[currentSectionIndex].subSectionId.findIndex(
+    const currentSubSectionIndex=courseSectionData[currentSectionIndex].subSection.findIndex(
       (data)=>data._id === sectionId
 
     )
@@ -100,9 +103,9 @@ const VideoDetails = () => {
       (data)=>data._id === sectionId
     )
     const noOfSubSections=courseSectionData[currentSectionIndex].subSection.length;
-    const currentSubSectionIndex=courseSectionData[currentSectionIndex].subSectionId.findIndex(
+    const currentSubSectionIndex=courseSectionData[currentSectionIndex].subSection.findIndex(
       (data)=>data._id === sectionId
-
+ 
     )
     if(currentSectionIndex !=0){
       // same setino prev video
@@ -117,12 +120,12 @@ const VideoDetails = () => {
       const prevSubSectionId=courseSectionData[currentSectionIndex-1].subSection[prevSubSectionLength]._id;
       navigate(`/view-course/${courseId}/section/${prevSectionId}/sub-section/${prevSubSectionId}}`)
 
-    }
-    const handleLectureCompletion=()=>{
-    
-    }   
+    }  
     
   }
+  const handleLectureCompletion=()=>{
+    
+  } 
   return (
     <div>
     {
@@ -142,7 +145,7 @@ const VideoDetails = () => {
               <div>
                   {
                     !completedLectures.includes(subSectionId) && (
-                      <Iconbtn
+                      <IconBtn
                         disabled={loading}
                         onClick={()=>handleLectureCompletion()}
                         text={!loading ? "Mark as completed" : "Loading"}
