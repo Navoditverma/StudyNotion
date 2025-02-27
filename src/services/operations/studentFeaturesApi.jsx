@@ -37,7 +37,7 @@ export async function buyCourse(token,courses,userDetails,navigate,dispatch) {
             toast.error("Razorpay SDK failed")
             return;
         }
-        console.log("CHECKPOINT 2")
+        console.log("CHECKPOINT 2",courses)
 
         const orderResponse=await apiConnector('POST',COURSE_PAYMENT_API,
                                                         {courses},
@@ -108,11 +108,13 @@ async function verifyPayment(bodyData,token,navigate, dispatch){
     const toastId=toast.loading("Verify Payment...");
     dispatch(setPaymentLoading(true));
     try{
-        console.log("Verfiying payment")
+        console.log("Verfiying payment 1")
         const response=await apiConnector("POST",COURSE_VERIFY_API,bodyData,{
             Authorization:`Bearer ${token}`
 
         })
+        console.log("Verfiying payment 2")
+
         if(!response.data.success){
             throw new Error(response.data.message)
         }

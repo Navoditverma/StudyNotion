@@ -25,10 +25,11 @@ import CourseDetails from "./pages/CourseDetails";
 import ViewCourse from "./pages/ViewCourse";
 import VideoDetails from "./components/core/ViewCourse/VideoDetails";
 import Instructor from "./components/core/Dashboard/InstructorDashboard/Instructor";
+import PurchaseHistory from "./components/core/Dashboard/PurchaseHistory"
+import Settings from "./components/core/Dashboard/settings/index";
 
 function App()  {
   const {user}=useSelector((state)=>state.profile)
-  // console.log("user",user)
   return (
     <div  className="w-screen min-h-screen bg-richblack-900 flex flex-col">
       <Navbar/>
@@ -45,13 +46,15 @@ function App()  {
         <Route path="/contact" element={<Contact />} />
         <Route element={ <PrivateRoute><Dashboard /></PrivateRoute>}>
         <Route path="dashboard/my-profile" element={<MyProfile />} />
-          {/* <Route path="dashboard/settings" element={<Settings />} /> */}
           
           {
             user?.accountType=== ACCOUNT_TYPE.STUDENT && (
               <>
               <Route path="dashboard/cart" element={<Cart/>} />
               <Route path="dashboard/enrolled-courses" element={<EnrolledCourses/>} />
+              <Route path="dashboard/purchase-history" element={<PurchaseHistory/>} />
+              <Route path="dashboard/Settings" element={<Settings/>} />
+
               </>
             )
           }

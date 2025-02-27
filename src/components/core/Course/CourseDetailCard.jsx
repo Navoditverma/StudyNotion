@@ -11,8 +11,9 @@ export function CourseDetailCard({course,setConformationalModal,handleBuyCourse}
     thumbnail:thumbnailImage,
     price:currentPrice
   }=course
-  const {user}=useSelector((state)=>state.user);
+  console.log("coursecard details",course)
   const {token}=useSelector((state)=>state.auth);
+  const {user}=useSelector((state)=>state.profile)
   const {navigate}=useNavigate();
   const {dispatch}=useDispatch();
 
@@ -41,60 +42,64 @@ export function CourseDetailCard({course,setConformationalModal,handleBuyCourse}
     toast.success("Link Copied Succesfully")
   }
   return(
-    <div>
+    <div
+    className={`flex flex-col gap-4 rounded-md bg-richblack-700 p-4 text-richblack-5`}
+    >
       <img
         src={thumbnailImage}
         alt='Thumbnail Image' 
-        className='max-h-[300px] min-h-[180px] w-[400px] '
+       className="max-h-[300px] min-h-[180px] w-[400px] overflow-hidden rounded-2xl object-cover md:max-w-full"
       />
-      <div>
-        Rs. {currentPrice}
-      </div>
-      <div>
-        <button
-        onClick={
-          user && course?.studentsEnrolled.includes(user?._id) ? 
-          ()=>navigate("/dashboard/enrolled-courses") :
-          handleBuyCourse
-        }
-        >
-            {
-              user && course?.studentsEnrolled.includes(user?._id) ? " Go to Course" : "Buy Now"
-            }
-        </button>
-      
-          { 
-            (!course?.studentsEnrolled.includes(user?._id)) && (
-                <button
-                onClick={handleAddToCart}>
-                  Add to Cart
-
-                </button>
-            )
-
-          }
+      <div className="px-4">
+        <div className="space-x-3 pb-4 text-3xl font-semibold">
+          Rs. {currentPrice}
         </div>
-        <div>
-          <p>30-Day Money-Back Guarantee</p>
-          <p>This Course Includes:</p>
-          <div>
-            {
-              course?.instructions?.map((item,index)=>(
-                <p key={index}>
-                  <span>{item}</span>
+        <div  className="flex flex-col gap-4">
+          <button
+          onClick={
+            user && course?.studentsEnrolled.includes(user?._id) ? 
+            ()=>navigate("/dashboard/enrolled-courses") :
+            handleBuyCourse
+          }
+          >
+              {
+                user && course?.studentsEnrolled.includes(user?._id) ? " Go to Course" : "Buy Now"
+              }
+          </button>
+        
+            { 
+              (!course?.studentsEnrolled.includes(user?._id)) && (
+                  <button
+                  onClick={handleAddToCart}>
+                    Add to Cart
 
-                </p>
-              ))
+                  </button>
+              )
+
             }
           </div>
-        </div>
-        <div className="text-center">
-          <button
-            className="mx-auto flex items-center gap-2 py-6 text-yellow-100 "
-            onClick={handleShare}
-          >
-            <FaShareSquare size={15} /> Share
-          </button>
+          <div>
+            <p>30-Day Money-Back Guarantee</p>
+            <p>This Course Includes:</p>
+            <div>
+              {
+                course?.instructions?.map((item,index)=>(
+                  <p key={index}>
+                    <span>{item}</span>
+
+                  </p>
+                ))
+              }
+            </div>
+          </div>
+          <div className="text-center">
+            <button
+              className="mx-auto flex items-center gap-2 py-6 text-yellow-100 "
+              onClick={handleShare}
+            >
+              <FaShareSquare size={15} /> Share
+            </button>
+          </div>
         </div>
     </div>
   )

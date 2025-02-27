@@ -148,25 +148,24 @@ exports.updateDisplayPicture=async( req, res)=>{
 
 exports.getEnrolledCourses = async (req, res) => {
     try {
-        console.log("gec CP 1")
         const userId = req.user.id
-        let userDetails = await User.findOne({
-            _id: userId,
-        })
-            .populate({
-            path: "courses",
-            populate: {
-                path: "courseContent",
-                populate: {
-                path: "subSection",
-                },
-            },
-            })
-            .exec()
+        console.log("gec CP 1",userId)
+
+        let userDetails = await User.findOne({ _id: userId })
+                .populate({
+                    path: "courses",
+                    populate: {
+                    path: "courseContent",
+                    populate: {
+                        path: "subSection",
+                    },
+                    },
+                })
+                .lean();
         console.log("gec CP 2",userDetails)
 
-        userDetails = userDetails.toObject()
-        console.log("gec CP 3",userDetails, userDetails.courses?.length)
+       
+        console.log("gec CP 3", userDetails, Array.isArray(userDetails.courses), Object.keys(userDetails.courses))
 
         var SubsectionLength = 0
         for (var i = 0; i < userDetails.courses.length; i++) {

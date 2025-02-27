@@ -9,7 +9,7 @@ const mongoose = require("mongoose")
 const crypto = require("crypto");
 const { access } = require("fs/promises");
 const { accessSync } = require("fs");
-const {CourseProgress}=require("../models/CourseProgress")
+const CourseProgress=require("../models/CourseProgress")
 
 
 
@@ -31,8 +31,8 @@ exports.capturePayment=async( req, res)=>{
         try{
             console.log("capture payment cp 2")
 
-            course=await Course.findById(course_id.courseId);
-            console.log("capture payment cp 3")
+            course=await Course.findById(course_id);
+            console.log("capture payment cp 3",courses,course_id.courseId)
 
             if(!course){
                 return res.status(200).json({success:false,message: "Could not find the course"})
@@ -149,8 +149,8 @@ const enrolledStudents = async (courses, userId, res) => {
 
 
         const enrolledCourse = await Course.findOneAndUpdate(
-          { _id: ObjectId },
-          { $push: { studentsEnroled: userId } },
+          { _id: courseId },
+          { $push: { studentsEnrolled: userId } },
           { new: true }
         )
         console.log("EC 3",enrolledCourse)
