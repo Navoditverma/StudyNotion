@@ -6,6 +6,7 @@ import IconBtn from '../../../../common/IconBtn';
 import { resetCourseState, setStep } from '../../../../../slices/courseSlice';
 import { COURSE_STATUS } from '../../../../../utils/constants';
 import { editCourseDetails } from '../../../../../services/operations/courseAPI';
+import { useNavigate } from 'react-router-dom';
 const PublishCourse = () => {
     const{
         register,
@@ -16,6 +17,7 @@ const PublishCourse = () => {
 
     }=useForm();
     const dispatch=useDispatch();
+    const navigate=useNavigate();
     const {course}=useSelector((state)=>state.course);
     const{token}=useSelector((state)=>state.auth)
     const [loading,setLoading]=useState(false);
@@ -27,8 +29,8 @@ const PublishCourse = () => {
     },[])
 
     const goToCourses=()=>{
-        dispatch(resetCourseState); 
-        //navigate("/dashboard/my-courses")
+        dispatch(resetCourseState()); 
+        navigate("/dashboard/my-courses")
     }
     const goBack=()=>{
         dispatch(setStep(2));
@@ -46,9 +48,9 @@ const PublishCourse = () => {
         setLoading(true);
         const result=await editCourseDetails(formData,token)
         console.log("result",result)
-        // if(result){
-        //     goToCourses();
-        // }
+        if(result){
+            goToCourses();
+        }
         setLoading(false);
     }
     const onSubmit=()=>{

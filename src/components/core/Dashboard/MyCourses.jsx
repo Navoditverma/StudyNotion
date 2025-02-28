@@ -24,7 +24,7 @@ const MyCourses = () => {
             <h1>My Courses</h1>
             <IconBtn
                 text="Add Course"
-                onClick={()=>navigate("/dashboard/add-course")}
+                onclick={()=>navigate("/dashboard/add-course")}
                 //totdo add icon
 
             />

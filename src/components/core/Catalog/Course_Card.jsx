@@ -20,25 +20,25 @@ useEffect(()=>{
         to={`/courses/${course.course._id}`}
         >
             <div>
-                <div>
+                <div className="rounded-lg">
                   <img  
                     src={course.course.thumbnail }
                     alt='course ka thumbnail'
-                    className={`h-[400px]  rounded-xl object-cover `}
+                    className={`${Height} w-full rounded-xl object-cover `}
                   />
 
                 </div>
-                <div>
-                  <p>{course.course?.courseName}</p>
-                  <p>{course.course.instructor?.firstName} {course.course.instructor?.lastName}</p>
-                  <div>
-                    <span>
+                <div className="flex flex-col gap-2 px-1 py-3">
+                  <p className="text-xl text-richblack-5">{course.course?.courseName}</p>
+                  <p className="text-sm text-richblack-50">{course.course.instructor?.firstName} {course.course.instructor?.lastName}</p>
+                  <div className="flex items-center gap-2">
+                    <span className="text-yellow-5">
                         {avgReviewCount}
                     </span>
                     <RatingStars Review_Count={avgReviewCount}/>
-                    <span>{course.course.ratingAndReviews?.length} Ratings</span>
+                    <span className="text-richblack-400">{course.course.ratingAndReviews?.length} Ratings</span>
                   </div>
-                  <p>{course.course.price}</p>
+                  <p  className="text-xl text-richblack-5">{course.course.price}</p>
                 </div>
             </div>
         </Link>

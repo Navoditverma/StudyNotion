@@ -28,6 +28,7 @@ const CourseSlider = ({Courses}) => {
           breakpoints={{
             1024:{slidesPerView:3,}
           }}
+          className="max-h-[30rem]"
           
           >
               {
@@ -40,7 +41,7 @@ const CourseSlider = ({Courses}) => {
           </Swiper>
         ) : 
         ( 
-           <p> No Courses Found</p>
+           <p className="text-xl text-richblack-5"> No Courses Found</p>
         )
       }
     </>

@@ -7,6 +7,7 @@ const Section=require("../models/Section")
 const SubSection=require("../models/SubSection")
 const mongoose=require("mongoose")
 const {convertSecondsToDuration}=require("../utils/secToDuration")
+const CourseProgress=require("../models/CourseProgress")
 
 //createCourese Handler
 
@@ -323,6 +324,7 @@ exports.getFullCourseDetails = async (req, res) => {
   try {
     const { courseId } = req.body
     const userId = req.user.id
+    // console.log("checkpoint 1")
     const courseDetails = await Course.findOne({
       _id: courseId,
     })
@@ -341,13 +343,15 @@ exports.getFullCourseDetails = async (req, res) => {
         },
       })
       .exec()
+      // console.log("checkpoint 2",courseDetails)
 
-    // let courseProgressCount = await CourseProgress.findOne({
-    //   courseID: courseId,
-    //   userId: userId,
-    // })
 
-    // console.log("courseProgressCount : ", courseProgressCount)
+    let courseProgressCount = await CourseProgress.findOne({
+      courseID: courseId,
+      userId: userId,
+    })
+
+    console.log("courseProgressCount : ", courseProgressCount)
 
     if (!courseDetails) {
       return res.status(400).json({
@@ -363,25 +367,25 @@ exports.getFullCourseDetails = async (req, res) => {
     //   });
     // }
 
-    // let totalDurationInSeconds = 0
-    // courseDetails.courseContent.forEach((content) => {
-    //   content.subSection.forEach((subSection) => {
-    //     const timeDurationInSeconds = parseInt(subSection.timeDuration)
-    //     totalDurationInSeconds += timeDurationInSeconds
-    //   })
-    // })
+    let totalDurationInSeconds = 0
+    courseDetails.courseContent.forEach((content) => {
+      content.subSection.forEach((subSection) => {
+        const timeDurationInSeconds = parseInt(subSection.timeDuration)
+        totalDurationInSeconds += timeDurationInSeconds
+      })
+    })
 
-    // const totalDuration = convertSecondsToDuration(totalDurationInSeconds)
+    const totalDuration = convertSecondsToDuration(totalDurationInSeconds)
 
     return res.status(200).json({
       success: true,
-      data: {courseDetails}
-        // courseDetails,
-        // totalDuration,
-      //   completedVideos: courseProgressCount?.completedVideos
-      //     ? courseProgressCount?.completedVideos
-      //     : [],
-      // },
+      data: {
+        courseDetails,
+        totalDuration,
+        completedVideos: courseProgressCount?.completedVideos
+          ? courseProgressCount?.completedVideos
+          : [],
+      },
     })
   } catch (error) {
     return res.status(500).json({

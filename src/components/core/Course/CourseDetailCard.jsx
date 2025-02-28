@@ -14,11 +14,11 @@ export function CourseDetailCard({course,setConformationalModal,handleBuyCourse}
   console.log("coursecard details",course)
   const {token}=useSelector((state)=>state.auth);
   const {user}=useSelector((state)=>state.profile)
-  const {navigate}=useNavigate();
-  const {dispatch}=useDispatch();
+  const navigate=useNavigate();
+  const dispatch=useDispatch();
 
   const handleAddToCart=()=>{
-      if(user && user?.accountType=== ACCOUNT_TYPE.INSTRUCTOR){
+      if(user && user?.accountType === ACCOUNT_TYPE.INSTRUCTOR){
         toast.error("You are an instructor , you cant buy a course");
         return;
       }

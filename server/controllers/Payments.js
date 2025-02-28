@@ -29,10 +29,10 @@ exports.capturePayment=async( req, res)=>{
     for(const course_id of courses){
         let course;
         try{
-            console.log("capture payment cp 2")
+            console.log("capture payment cp 2" ,courses.length)
 
             course=await Course.findById(course_id);
-            console.log("capture payment cp 3",courses,course_id.courseId)
+            console.log("capture payment cp 3",courses,course)
 
             if(!course){
                 return res.status(200).json({success:false,message: "Could not find the course"})
@@ -41,7 +41,10 @@ exports.capturePayment=async( req, res)=>{
             if(course.studentsEnrolled.includes(uid)) {
                 return res.status(200).json({success:false,message:"Already enrolled in the course"})
             }
-            totalAmount=course.price;
+            console.log("total price before",totalAmount)
+            totalAmount=  totalAmount +course.price;
+            console.log("total price after",totalAmount)
+
         }
         catch(err){
             console.log(err);
@@ -50,34 +53,33 @@ exports.capturePayment=async( req, res)=>{
                 message:err.message
             })
         }
-        console.log("capture payment cp 4")
+    }
 
-        const options={
-            amount:totalAmount *100,
-            currency:"INR",
-            receipt:Math.random (Date.now()).toString()
-        }
+    const options={
+        amount:totalAmount *100,
+        currency:"INR",
+        receipt:Math.random (Date.now()).toString()
+    }
 
-        try{
-            const paymentResponse=await instance.orders.create(options);
-            console.log("capture payment cp 5")
+    try{
+        const paymentResponse=await instance.orders.create(options);
+        console.log("capture payment cp 5")
 
-            return res.json({
-                success:true,
-                message:paymentResponse
-            })
-        }
-        catch(err){
-            console.log(err)
-            return res.status(500).json({
-                success:false,
-                message:"Could not initiate order"
+        return res.json({
+            success:true,
+            message:paymentResponse
+        })
+    }
+    catch(err){
+        console.log(err)
+        return res.status(500).json({
+            success:false,
+            message:"Could not initiate order"
 
-            })}
+        })}
 
 
     }
-}
 exports.verifyPayment=async(req,res)=>{
     const razorpay_order_id=req.body?.razorpay_order_id;
     const razorpay_payment_id=req.body?.razorpay_payment_id;

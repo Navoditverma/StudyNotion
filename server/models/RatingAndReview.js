@@ -22,5 +22,5 @@ const ratingAndReviewSchema=new mongoose.Schema({
 	},
     
 })
+module.exports=mongoose.model("RatingAndReview",ratingAndReviewSchema) 
 
-mongoose.exports=mongoose.model("RatingAndReview",ratingAndReviewSchema)
