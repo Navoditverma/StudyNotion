@@ -45,33 +45,33 @@ function App()  {
         <Route path="about" element={<About/>}/>
         <Route path="/contact" element={<Contact />} />
         <Route element={ <PrivateRoute><Dashboard /></PrivateRoute>}>
-        <Route path="dashboard/my-profile" element={<MyProfile />} />
-          
-          {
-            user?.accountType=== ACCOUNT_TYPE.STUDENT && (
+          <Route path="dashboard/my-profile" element={<PrivateRoute><MyProfile /></PrivateRoute>} />
+            
+            {
+              user?.accountType=== ACCOUNT_TYPE.STUDENT && (
+                <>
+                <Route path="dashboard/cart" element={<Cart/>} />
+                <Route path="dashboard/enrolled-courses" element={<EnrolledCourses/>} />
+                <Route path="dashboard/purchase-history" element={<PurchaseHistory/>} />
+                <Route path="dashboard/Settings" element={<Settings/>} />
+
+                </>
+              )
+            }
+            {
+              user?.accountType === ACCOUNT_TYPE.INSTRUCTOR && (
               <>
-              <Route path="dashboard/cart" element={<Cart/>} />
-              <Route path="dashboard/enrolled-courses" element={<EnrolledCourses/>} />
-              <Route path="dashboard/purchase-history" element={<PurchaseHistory/>} />
-              <Route path="dashboard/Settings" element={<Settings/>} />
-
-              </>
-            )
-          }
-          {
-            user?.accountType === ACCOUNT_TYPE.INSTRUCTOR && (
-             <>
-              <Route path="dashboard/add-course" element={<AddCourse />} />
-              <Route path="dashboard/my-courses" element={<MyCourses />} />
-              <Route path="dashboard/edit-course/:courseId" element={<EditCourse/>} />
-              <Route path="dashboard/instructor" element={<Instructor />} />
-              <Route path="dashboard/Settings" element={<Settings/>} />
+                <Route path="dashboard/add-course" element={<AddCourse />} />
+                <Route path="dashboard/my-courses" element={<MyCourses />} />
+                <Route path="dashboard/edit-course/:courseId" element={<EditCourse/>} />
+                <Route path="dashboard/instructor" element={<Instructor />} />
+                <Route path="dashboard/Settings" element={<Settings/>} />
 
 
 
-              </>
-        )
-      }
+                </>
+          )
+        }
       </Route>
       <Route path="catalog/:catalogName" element={<Catalog />} />
       <Route path="courses/:courseId" element={<CourseDetails />} />

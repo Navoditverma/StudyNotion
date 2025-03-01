@@ -34,22 +34,22 @@ const UpdatePassword = () => {
 
     }
   return (
-    <div>
+    <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
         {
             loading? 
             (<div>
                 Loading...
             </div>) :
             (
-                <div> 
-                    <h1>Choose new Password</h1>
-                    <p>
+                <div className="max-w-[500px] p-4 lg:p-8"> 
+                    <h1 className="text-[1.875rem] font-semibold leading-[2.375rem] text-richblack-5">Choose new Password</h1>
+                    <p className="my-4 text-[1.125rem] leading-[1.625rem] text-richblack-100">
                         Almost done. Enter your new password and youre all set.
                     </p>
                     <form onSubmit={handleOnSubmit}>
-                        <label>
-                            <p>
-                                new password <sup>*</sup>
+                        <label className="relative">
+                            <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
+                                new password  <sup className="text-pink-200">*</sup>
                             </p>
                             <input
                                 type={showPassword? "text":"password"}
@@ -57,23 +57,24 @@ const UpdatePassword = () => {
                                 value={password} 
                                 onChange={handleOnChange}
                                 placeholder='Password'
-                                className='w-full p-6 bg-richblack-600 text-richblack-5  '
+                                className="form-style w-full !pr-10"
                             />
                             <span
                             onClick={()=>(setShowPassword((prev) => !prev))}
+                            className="absolute right-3 top-[38px] z-[10] cursor-pointer"
                             
                             >
                                 {
-                                    showPassword ? <IoMdEye fontSize={24} /> : <IoMdEyeOff fontSize={24} />
+                                    showPassword ? <IoMdEye fontSize={24} fill="#AFB2BF" /> : <IoMdEyeOff fontSize={24} fill="#AFB2BF"/>
                                 }
 
                             </span>
 
                         </label>
 
-                        <label>
-                            <p>
-                                new Confirm Password <sup>*</sup>
+                        <label className="relative mt-3 block">
+                            <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
+                                new Confirm Password <sup className="text-pink-200">*</sup>
                             </p>
                             <input
                                 type={showConfirmPassword? "text":"password"}
@@ -81,25 +82,28 @@ const UpdatePassword = () => {
                                 value={confirmPassword} 
                                 onChange={handleOnChange}
                                 placeholder='Confirm Password'
+                                className="form-style w-full !pr-10"
                             />
                             <span
                             onClick={()=>(setShowConfirmPassword((prev) => !prev))}
+                            className="absolute right-3 top-[38px] z-[10] cursor-pointer"
                             
                             >
                                 {
-                                    showPassword ? <IoMdEye fontSize={24} /> : <IoMdEyeOff fontSize={24} />
+                                    showPassword ? <IoMdEye fill="#AFB2BF" fontSize={24} /> : <IoMdEyeOff fill="#AFB2BF" fontSize={24} />
                                 }
 
                             </span>
 
-                            <button type='submit'>
+                            <button type='submit' 
+                            className="mt-6 w-full rounded-[8px] bg-yellow-50 py-[12px] px-[12px] font-medium text-richblack-900">
                                 Reset Password
                             </button>
                         </label>
                     </form>
-                        <div>
+                        <div className="mt-6 flex items-center justify-between">
                             <Link to="/login">
-                                <p>Back to Login</p>
+                                <p className="flex items-center gap-x-2 text-richblack-5">Back to Login</p>
 
                             </Link>
                         </div>
